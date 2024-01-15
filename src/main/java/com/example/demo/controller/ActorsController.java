@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ActorDto;
 import com.example.demo.entities.Actors;
+import com.example.demo.entities.Movie;
 import com.example.demo.services.ActorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,12 @@ public class ActorsController {
 
     @GetMapping("/{idActor}")
     public ResponseEntity<Actors> get(@PathVariable long idActor) {
-        return ResponseEntity.ok(this.actorsService.findById(idActor));
+
+        if (this.actorsService.existsById(idActor)) {
+            return ResponseEntity.ok(this.actorsService.findById(idActor));
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
     @PostMapping
@@ -49,13 +55,19 @@ public class ActorsController {
     }
 
     @DeleteMapping("/{idActor}")
-    public  ResponseEntity<Void> delete (@PathVariable Long idActor){
+    public ResponseEntity<Void> delete(@PathVariable Long idActor) {
 
-        if ( this.actorsService.existsById(idActor)) {
+        if (this.actorsService.existsById(idActor)) {
             this.actorsService.deleteById(idActor);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+
+    @GetMapping("/search")
+    public List<Actors> search(@RequestParam String term) {
+        return this.actorsService.findByNameActor(term);
     }
 
 

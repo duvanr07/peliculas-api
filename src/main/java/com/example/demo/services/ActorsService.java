@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.ActorDto;
 import com.example.demo.entities.Actors;
+import com.example.demo.entities.Movie;
 import com.example.demo.repositories.ActorsRepository;
 import com.example.demo.repositories.MoviesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,4 +74,9 @@ public class ActorsService {
     public void deleteById(Long id) {
         this.actorsRepository.deleteById(id);
     }
+
+    public List<Actors> findByNameActor(String title) {
+        return this.actorsRepository.findAllByOriginalNameLikeIgnoreCase("%" + title.toUpperCase() + "%");
+    }
+
 }
